@@ -10,8 +10,8 @@ export default function App() {
         style={styles.map}
         provider={PROVIDER_GOOGLE}
         initialRegion={{
-          latitude: 1.3483,
-          longitude: 103.6831,
+          latitude: 1.3397,
+          longitude: 103.7067,
           latitudeDelta: 0.00922,
           longitudeDelta: 0.00421,
         }}
