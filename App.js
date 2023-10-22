@@ -1,13 +1,37 @@
 import React, { createRef, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 
+markerList = [
+  {
+    coordinate: {
+      latitude: 1.3452007715119019,
+      longitude: 103.68086991160779,
+    },
+    chargingSpotName: "NTU Carpark A",
+    chargingSpotAddress: "50 Nanyang Ave, Block N3.1, Singapore, 639798",
+  },
+  {
+    coordinate: {
+      latitude: 1.3438398751594671,
+      longitude: 103.68593367297621,
+    },
+    chargingSpotName: "NTU Hall of Residence 4",
+    chargingSpotAddress: "11 Nanyang Circle, Singapore 639779",
+  },
+];
 export default function App() {
   const _map = createRef();
-  const [mapCamera, setMapCamera] = useState();
+  const [mapCamera, setMapCamera] = useState({
+    center: {
+      latitude: 1.3483,
+      longitude: 103.6831,
+    },
+    zoom: 17,
+  });
 
   useEffect(() => {
     (async () => {
@@ -76,7 +100,17 @@ export default function App() {
         provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
         showsMyLocationButton={false}
-      />
+      >
+        {markerList.map((marker, index) => {
+          return (
+            <Marker
+              identifier={index.toString()}
+              key={index.toString()}
+              coordinate={marker.coordinate}
+            />
+          );
+        })}
+      </MapView>
       <StatusBar style="auto" />
     </View>
   );
