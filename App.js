@@ -2,7 +2,8 @@ import React, { createRef, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import { MaterialIcons } from "@expo/vector-icons";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 
 markerList = [
@@ -25,6 +26,7 @@ markerList = [
 ];
 export default function App() {
   const _map = createRef();
+  const _search = createRef();
   const [mapCamera, setMapCamera] = useState({
     center: {
       latitude: 1.3483,
@@ -63,7 +65,7 @@ export default function App() {
     _map.current.setCamera(mapCamera);
   }, [mapCamera]);
 
-  function goToCurrentLoc() {
+  const goToCurrentLoc = () => {
     return (
       <View style={styles.myLocationView}>
         <TouchableOpacity onPress={getCurrentLocation}>
@@ -71,7 +73,7 @@ export default function App() {
         </TouchableOpacity>
       </View>
     );
-  }
+  };
 
   const getCurrentLocation = () => {
     (async () => {
@@ -91,8 +93,57 @@ export default function App() {
     })();
   };
 
+  const onMapPress = (e) => {
+    _search.current.blur();
+  };
+
+  const searchBar = () => {
+    return (
+      <View style={styles.searchBar}>
+        <Ionicons
+          name="search"
+          color="gray"
+          size={20}
+          style={{ paddingVertical: 10, paddingRight: 5 }}
+        />
+        <GooglePlacesAutocomplete
+          ref={_search}
+          styles={{
+            textInput: { height: 40 },
+            listView: {
+              borderRadius: 5,
+            },
+            row: {
+              backgroundColor: "#FFFFFF",
+              padding: 13,
+              flexDirection: "row",
+            },
+          }}
+          placeholder="Search"
+          fetchDetails={true}
+          onPress={(data, details = null) => {
+            setMapCamera({
+              center: {
+                latitude: details.geometry.location.lat,
+                longitude: details.geometry.location.lng,
+              },
+              zoom: 17,
+            });
+          }}
+          query={{
+            key: "AIzaSyBQL52pAibHVsZ1Dn-MHQVOFxNWBRBwIbI",
+            language: "en",
+            components: "country:sgp",
+          }}
+        />
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
+      <StatusBar translucent={false} backgroundColor="gray" />
+      {searchBar()}
       {goToCurrentLoc()}
       <MapView
         ref={_map}
@@ -100,6 +151,7 @@ export default function App() {
         provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
         showsMyLocationButton={false}
+        onPress={onMapPress}
       >
         {markerList.map((marker, index) => {
           return (
@@ -111,7 +163,6 @@ export default function App() {
           );
         })}
       </MapView>
-      <StatusBar style="auto" />
     </View>
   );
 }
@@ -127,7 +178,6 @@ const styles = StyleSheet.create({
     zIndex: -1,
     width: "100%",
     height: "100%",
-    paddingTop: 100,
   },
   myLocationView: {
     alignItems: "flex-end",
@@ -138,5 +188,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: "gray",
+  },
+  searchBar: {
+    position: "absolute",
+    left: 0.0,
+    right: 0.0,
+    top: 0.0,
+    flexDirection: "row",
+    marginTop: 10,
+    marginHorizontal: 10,
   },
 });
