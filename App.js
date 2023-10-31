@@ -1,10 +1,10 @@
 import React, { createRef, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { StyleSheet, View, TouchableOpacity,Text } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { MaterialIcons, Ionicons } from "@expo/vector-icons";
-import * as Location from "expo-location";
+//import * as Location from "expo-location";
 
 markerList = [
   {
@@ -27,6 +27,19 @@ markerList = [
 export default function App() {
   const _map = createRef();
   const _search = createRef();
+  const [selectedMarker, setSelectedMarker] = useState(null);
+  const [showMarkerOverlay, setShowMarkerOverlay] = useState(false);
+
+  const MarkerOverlay = ({ marker,onClose}) =>{
+    return(
+        <View style={styles.markerOverlay}>
+          <Text> This is the carpark name</Text>
+          <Text>Address</Text> 
+        </View>
+        );
+    };
+    
+
   const [mapCamera, setMapCamera] = useState({
     center: {
       latitude: 1.3483,
@@ -95,6 +108,8 @@ export default function App() {
 
   const onMapPress = (e) => {
     _search.current.blur();
+    setShowMarkerOverlay(false);
+    setSelectedMarker(null);
   };
 
   const searchBar = () => {
@@ -159,10 +174,18 @@ export default function App() {
               identifier={index.toString()}
               key={index.toString()}
               coordinate={marker.coordinate}
+              onPress = {()=>{
+                setSelectedMarker(marker);
+                setShowMarkerOverlay(true)}}
             />
           );
         })}
-      </MapView>
+        </MapView>
+        {setShowMarkerOverlay && selectedMarker && (
+          <MarkerOverlay
+            marker={selectedMarker}
+          />
+        )}
     </View>
   );
 }
@@ -197,5 +220,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 10,
     marginHorizontal: 10,
+  },
+  markerOverlay: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 350,
+    padding: 16,
+    backgroundColor: "white",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius:20,
+    elevation:5,
+    shadowColor: 'black',
+    shadowOpacity: 0.2,
+    shadowOffset:{ width:0,height:-3},
   },
 });
