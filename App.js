@@ -5,6 +5,9 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 //import * as Location from "expo-location";
+//import BackButton from '"C://Users//ZW//Documents//GitHub//ParkNow//component//backButton.js"';
+//import DetailsButton from './components/moreDetailsButton';
+//import NavigateButton from './components/navigateButton';
 
 markerList = [
   {
@@ -29,15 +32,42 @@ export default function App() {
   const _search = createRef();
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [showMarkerOverlay, setShowMarkerOverlay] = useState(false);
+  const [showMoreDetailsOverlay, setShowMoreDetailsOverlay] = useState(false);
 
   const MarkerOverlay = ({ marker,onClose}) =>{
     return(
         <View style={styles.markerOverlay}>
-          <Text> This is the carpark name</Text>
-          <Text>Address</Text> 
+          <Text style={{fontSize:18,fontWeight:"bold",marginLeft:5}}>"carpark name"</Text> 
+          <Text></Text>
+
+          <TouchableOpacity onPress={toggleMoreDetailsOverlay}>
+            <Text style={{fontSize:18,fontWeight:"bold",marginLeft:5}}>More Details</Text>
+          </TouchableOpacity>
         </View>
         );
     };
+    
+  const toggleMoreDetailsOverlay = () => {
+    setShowMoreDetailsOverlay(!showMoreDetailsOverlay);
+  };
+
+  const MoreDetailsOverlay = ({ marker,onClose}) =>{
+    return(
+      <View style={styles.markerOverlay}>
+        <Text style={{fontSize:30,fontWeight:"bold"}}>"carpark name"</Text>
+        <Text></Text>
+        <Text style={{fontSize:18,fontWeight:"bold"}}>Address:</Text> 
+        <Text></Text>
+        <Text style={{fontSize:18,fontWeight:"bold"}}>Available Lots:</Text>
+        <Text></Text>
+        <Text style={{fontSize:18,fontWeight:"bold"}}>Car Park Rate:</Text>  
+        
+        <TouchableOpacity onPress={onClose}>
+          <Ionicons name="close" size={30} color="gray" />
+        </TouchableOpacity>  
+      </View>
+    );
+  };
     
 
   const [mapCamera, setMapCamera] = useState({
@@ -186,6 +216,8 @@ export default function App() {
             marker={selectedMarker}
           />
         )}
+        {showMoreDetailsOverlay && selectedMarker &&(<MoreDetailsOverlay onClose={toggleMoreDetailsOverlay} />)}
+
     </View>
   );
 }
