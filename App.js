@@ -1,13 +1,15 @@
 import React, { createRef, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, TouchableOpacity,Text } from "react-native";
+import { StyleSheet, View, TouchableOpacity,Text} from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { MaterialIcons, Ionicons } from "@expo/vector-icons";
-//import * as Location from "expo-location";
-//import BackButton from '.component/backButton.js';
-//import DetailsButton from './components/moreDetailsButton';
-//import NavigateButton from './components/navigateButton';
+import * as Location from "expo-location";
+import Feather from 'react-native-vector-icons/Feather';
+
+//import BackButton from "./component/backButton";
+//import NavigateButton from "./component/navigateButton";
+
 
 markerList = [
   {
@@ -37,16 +39,24 @@ export default function App() {
   const MarkerOverlay = ({ marker,onClose}) =>{
     return(
         <View style={styles.markerOverlay}>
-          <Text style={{fontSize:18,fontWeight:"bold",marginLeft:5}}>"carpark name"</Text> 
+          <Text style={{fontSize:23,fontWeight:"bold",marginLeft:5,top:3}}>"carpark name"</Text> 
           <Text></Text>
 
-          <TouchableOpacity onPress={toggleMoreDetailsOverlay}>
-            <Text style={{fontSize:18,fontWeight:"bold",marginLeft:5}}>More Details</Text>
-          </TouchableOpacity>
+          <DetailsButton/>
         </View>
         );
     };
     
+  const DetailsButton = () =>{
+    return (
+        <View style={styles.detailsContainer1}>
+            <TouchableOpacity onPress = {toggleMoreDetailsOverlay} style={styles.detailsContainer2}>
+                <Feather name="more-vertical" size = {30} color = "black" style={styles.detailsIcon}/>
+            </TouchableOpacity>
+        </View>
+    );
+  }
+
   const toggleMoreDetailsOverlay = () => {
     setShowMoreDetailsOverlay(!showMoreDetailsOverlay);
   };
@@ -266,6 +276,29 @@ const styles = StyleSheet.create({
     elevation:5,
     shadowColor: 'black',
     shadowOpacity: 0.2,
-    shadowOffset:{ width:0,height:-3},
+    shadowOffset:{ width:0,height:-3
+    }},
+  detailsContainer1: {
+      backgroundColor: 'white',
+      height: 40,
+      width:20,
+      top:15,
+      right:25,
+      position: 'absolute',
+      borderRadius: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+  },
+  detailsIcon:{
+      height: 30,
+      width:30,
+  },
+  detailsContainer2: {
+      borderRadius: 10,
+      width: '100%',
+      height: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row',
   },
 });
