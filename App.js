@@ -5,7 +5,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 //import * as Location from "expo-location";
-//import BackButton from '"C://Users//ZW//Documents//GitHub//ParkNow//component//backButton.js"';
+//import BackButton from '.component/backButton.js';
 //import DetailsButton from './components/moreDetailsButton';
 //import NavigateButton from './components/navigateButton';
 
