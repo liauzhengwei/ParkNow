@@ -7,9 +7,7 @@ import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import Feather from 'react-native-vector-icons/Feather';
 
-//import BackButton from "./component/backButton";
 //import NavigateButton from "./component/navigateButton";
-
 
 markerList = [
   {
@@ -63,7 +61,7 @@ export default function App() {
 
   const MoreDetailsOverlay = ({ marker,onClose}) =>{
     return(
-      <View style={styles.markerOverlay}>
+      <View style={styles.moreDetailsOverlay}>
         <Text style={{fontSize:30,fontWeight:"bold"}}>"carpark name"</Text>
         <Text></Text>
         <Text style={{fontSize:18,fontWeight:"bold"}}>Address:</Text> 
@@ -72,10 +70,23 @@ export default function App() {
         <Text></Text>
         <Text style={{fontSize:18,fontWeight:"bold"}}>Car Park Rate:</Text>  
         
-        <TouchableOpacity onPress={onClose}>
-          <Ionicons name="close" size={30} color="gray" />
-        </TouchableOpacity>  
+        <BackButton backToMarkerOverlay={backToMarkerOverlay}/>
       </View>
+    );
+  };
+
+  const backToMarkerOverlay = () => {
+    setShowMoreDetailsOverlay(false);
+    setShowMarkerOverlay(true);
+  }
+
+  const BackButton = ({backToMarkerOverlay}) => {
+    return(
+      <View style={styles.backButtonContainer1}>
+      <TouchableOpacity onPress={backToMarkerOverlay} style={styles.backButtonContainer2}>
+        <Text style={styles.label}>Back</Text>  
+      </TouchableOpacity>
+      </View> 
     );
   };
     
@@ -226,7 +237,7 @@ export default function App() {
             marker={selectedMarker}
           />
         )}
-        {showMoreDetailsOverlay && selectedMarker &&(<MoreDetailsOverlay onClose={toggleMoreDetailsOverlay} />)}
+        {showMoreDetailsOverlay && selectedMarker &&(<MoreDetailsOverlay  />)}
 
     </View>
   );
@@ -278,6 +289,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowOffset:{ width:0,height:-3
     }},
+  moreDetailsOverlay:{
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom:0,
+    padding:16,
+    backgroundColor:"white",
+  },    
   detailsContainer1: {
       backgroundColor: 'white',
       height: 40,
@@ -299,6 +319,31 @@ const styles = StyleSheet.create({
       height: '100%',
       alignItems: 'center',
       justifyContent: 'center',
-      flexDirection: 'row',
+  },
+  backButtonContainer1: {
+    backgroundColor: '#0a0a0a',
+    height: 50,
+    width:100,
+    padding: 10,
+    margin: 10,
+    borderRadius: 5,
+    borderWidth:3,
+    borderColor:'#666e6a',
+    bottom:10,
+    left:10,
+    position: 'absolute',
+},
+label: {
+    color: 'white',
+    fontWeight: 'semibold',
+    fontSize: 16,
+    paddingBottom:3,
+},
+backButtonContainer2: {
+    borderRadius: 10,
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
