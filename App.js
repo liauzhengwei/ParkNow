@@ -32,6 +32,8 @@ export default function App() {
   const [showMarkerOverlay, setShowMarkerOverlay] = useState(false);
   const [showMoreDetailsOverlay, setShowMoreDetailsOverlay] = useState(false);
   const [showNavigateOverlay, setShowNavigateOverlay] = useState(false); 
+  const [showBlurOverlay, setShowBlurOverlay] = useState(false);
+
 
   const MarkerOverlay = ({ marker,onClose}) =>{
     return(
@@ -108,6 +110,7 @@ export default function App() {
     setShowMoreDetailsOverlay(false);
     setShowNavigateOverlay(false);
     setShowMarkerOverlay(true);
+    setShowBlurOverlay(false);
   }
 
   const BackButton = ({backToMarkerOverlay}) => {
@@ -121,6 +124,11 @@ export default function App() {
   };
 
   const NavigateButton = () =>{
+    const openNavigateOverlay = () => {
+      setShowNavigateOverlay(true);
+      setShowBlurOverlay(true);
+    }
+
     return (
       <View style={styles.navigateContainer1}>
         <TouchableOpacity onPress={openNavigateOverlay} style={styles.navigateContainer2}>
@@ -162,6 +170,13 @@ export default function App() {
 
   const openNavigateOverlay = () => {
     setShowNavigateOverlay(true);
+  };
+
+  const BlurScreenOverlay = () => {
+    return showBlurOverlay ? (
+      <View style = {styles.blurScreenOverlay}>
+      </View>
+    ) :null;
   };
 
   const [mapCamera, setMapCamera] = useState({
@@ -309,6 +324,7 @@ export default function App() {
           );
         })}
         </MapView>
+        <BlurScreenOverlay />
         {setShowMarkerOverlay && selectedMarker && 
           <MarkerOverlay
             marker={selectedMarker}
@@ -436,6 +452,7 @@ backButtonContainer2: {
     padding:16,
     height: 200,
     backgroundColor:"white",
+    zIndex:2,
   },
   navigateContainer1: {
     backgroundColor: '#0da154',
@@ -498,5 +515,14 @@ backButtonContainer2: {
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-  }
+  },
+  blurScreenOverlay:{
+    position: "absolute",
+    top:0,
+    left:0,
+    right:0,
+    bottom:0,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    zIndex:1,
+  },
 });
