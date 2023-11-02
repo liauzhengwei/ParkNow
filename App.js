@@ -3,7 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View, TouchableOpacity,Text} from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { MaterialIcons, Ionicons } from "@expo/vector-icons";
+import { MaterialIcons, Ionicons,FontAwesome5,MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import Feather from 'react-native-vector-icons/Feather';
 
@@ -35,21 +35,39 @@ export default function App() {
 
   const MarkerOverlay = ({ marker,onClose}) =>{
     return(
-        <View style={styles.markerOverlay}>
-          <Text style={{fontSize:23,fontWeight:"bold",marginLeft:5,top:3}}>"carpark name"</Text> 
-          <Text></Text>
-          <Text style={{fontSize:18}}>icon "Address"</Text>
-          <Text></Text>
-          <Text style={{fontSize:18}}>icon Estimated Driving Time</Text>
-          <Text></Text>
-          <Text style={{fontSize:18}}>icon Parking Time dropbar</Text>
-          <Text></Text>
-          <Text style={{fontSize:18}}>Estimated Parking Cost: </Text>
-
-          <DetailsButton/>
-          <NavigateButton/>
+      <View style={styles.markerOverlay}>
+        <Text style={{ fontSize: 23, fontWeight: "bold", marginLeft: 5, top: 3 }}>"carpark name"</Text>
+        <Text></Text>
+        <View style={styles.row}>
+          <Ionicons
+            name = "location-sharp"
+            size={25} // Adjust the size of the icon as needed
+            color="black" // Set the icon color
+            marginRight={17}/>
+          <Text style={{ fontSize: 18 }}>"Address"</Text>
         </View>
-        );
+        <Text></Text>
+        <View style={styles.row}>
+          <MaterialCommunityIcons
+            name = "clock-time-four-outline"
+            size={25} // Adjust the size of the icon as needed
+            color="black" // Set the icon color
+            marginRight={17}/>
+          <Text style={{ fontSize: 18 }}>Estimated Driving Time</Text>
+        </View>
+        <Text></Text>
+        <View style={styles.row}>
+          <FontAwesome5
+            name="car-side" // The name of the icon you want to use
+            size={25} // Adjust the size of the icon as needed
+            color="black" // Set the icon color
+            marginRight={10} />
+          <Text style={{ fontSize: 18 }}>Parking Time dropbar</Text>
+        </View>
+        <Text></Text>
+        <Text style={{ fontSize: 18,paddingLeft:40 }}>Estimated Parking Cost: </Text><DetailsButton /><NavigateButton />
+      </View>
+      );
     };
     
   const DetailsButton = () =>{
@@ -69,9 +87,9 @@ export default function App() {
   const MoreDetailsOverlay = ({ marker,onClose}) =>{
     return(
       <View style={styles.moreDetailsOverlay}>
-        <Text style={{fontSize:30,fontWeight:"bold",top:30}}>"carpark name"</Text>
+        <Text style={{fontSize:30,fontWeight:"bold",top:10}}>"carpark name"</Text>
         <Text></Text>
-        <Text style={{fontSize:18,fontWeight:"bold",marginTop:40}}>Address:</Text> 
+        <Text style={{fontSize:18,fontWeight:"bold",paddingTop:20}}>Address:</Text> 
         <Text style={{fontSize:15}}>"address"</Text>
         <Text></Text>
         <Text style={{fontSize:18,fontWeight:"bold"}}>Available Lots:</Text>
@@ -314,7 +332,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 350,
+    height: 325,
     padding: 16,
     backgroundColor: "white",
     borderTopLeftRadius: 20,
@@ -416,5 +434,8 @@ navigateContainer2: {
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  row: {
+    flexDirection: "row",
   },
 });
