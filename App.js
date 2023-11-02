@@ -7,8 +7,6 @@ import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import Feather from 'react-native-vector-icons/Feather';
 
-//import NavigateButton from "./component/navigateButton";
-
 markerList = [
   {
     coordinate: {
@@ -33,14 +31,23 @@ export default function App() {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [showMarkerOverlay, setShowMarkerOverlay] = useState(false);
   const [showMoreDetailsOverlay, setShowMoreDetailsOverlay] = useState(false);
+  const [showNavigateOverlay, setShowNavigateOverlay] = useState(false); 
 
   const MarkerOverlay = ({ marker,onClose}) =>{
     return(
         <View style={styles.markerOverlay}>
           <Text style={{fontSize:23,fontWeight:"bold",marginLeft:5,top:3}}>"carpark name"</Text> 
           <Text></Text>
+          <Text style={{fontSize:18}}>icon "Address"</Text>
+          <Text></Text>
+          <Text style={{fontSize:18}}>icon Estimated Driving Time</Text>
+          <Text></Text>
+          <Text style={{fontSize:18}}>icon Parking Time dropbar</Text>
+          <Text></Text>
+          <Text style={{fontSize:18}}>Estimated Parking Cost: </Text>
 
           <DetailsButton/>
+          <NavigateButton/>
         </View>
         );
     };
@@ -62,13 +69,16 @@ export default function App() {
   const MoreDetailsOverlay = ({ marker,onClose}) =>{
     return(
       <View style={styles.moreDetailsOverlay}>
-        <Text style={{fontSize:30,fontWeight:"bold"}}>"carpark name"</Text>
+        <Text style={{fontSize:30,fontWeight:"bold",top:30}}>"carpark name"</Text>
         <Text></Text>
-        <Text style={{fontSize:18,fontWeight:"bold"}}>Address:</Text> 
+        <Text style={{fontSize:18,fontWeight:"bold",marginTop:40}}>Address:</Text> 
+        <Text style={{fontSize:15}}>"address"</Text>
         <Text></Text>
         <Text style={{fontSize:18,fontWeight:"bold"}}>Available Lots:</Text>
+        <Text style={{fontSize:15}}>"available lots"</Text>
         <Text></Text>
-        <Text style={{fontSize:18,fontWeight:"bold"}}>Car Park Rate:</Text>  
+        <Text style={{fontSize:18,fontWeight:"bold"}}>Car Park Rate:</Text>
+        <Text style={{fontSize:15}}>"car park rate"</Text>  
         
         <BackButton backToMarkerOverlay={backToMarkerOverlay}/>
       </View>
@@ -84,12 +94,35 @@ export default function App() {
     return(
       <View style={styles.backButtonContainer1}>
       <TouchableOpacity onPress={backToMarkerOverlay} style={styles.backButtonContainer2}>
-        <Text style={styles.label}>Back</Text>  
+        <Text style={styles.backLabel}>Back</Text>  
       </TouchableOpacity>
       </View> 
     );
   };
-    
+
+  const NavigateButton = () =>{
+    return (
+      <View style={styles.navigateContainer1}>
+        <TouchableOpacity onPress={toggleNavigateOverlay} style={styles.navigateContainer2}>
+            <Text style={styles.navigateLabel}>Navigate</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  const toggleNavigateOverlay = () => {
+    setShowNavigateOverlay(!showNavigateOverlay);
+  };
+
+  const NavigateOverlay = ({ marker,onClose}) =>{
+    return(
+      <View style={styles.navigateOverlay}>
+        <Text style={{fontSize:20}}>Open with:</Text>
+        <Text></Text>
+        <Text> "Google Maps" "Waze" ...</Text>
+      </View>
+    );
+  };
 
   const [mapCamera, setMapCamera] = useState({
     center: {
@@ -161,6 +194,8 @@ export default function App() {
     _search.current.blur();
     setShowMarkerOverlay(false);
     setSelectedMarker(null);
+    setShowMoreDetailsOverlay(false);
+    setShowNavigateOverlay(false);
   };
 
   const searchBar = () => {
@@ -232,13 +267,13 @@ export default function App() {
           );
         })}
         </MapView>
-        {setShowMarkerOverlay && selectedMarker && (
+        {setShowMarkerOverlay && selectedMarker && 
           <MarkerOverlay
             marker={selectedMarker}
           />
-        )}
-        {showMoreDetailsOverlay && selectedMarker &&(<MoreDetailsOverlay  />)}
-
+        }
+        {showMoreDetailsOverlay && selectedMarker &&<MoreDetailsOverlay  />}
+        {showNavigateOverlay && selectedMarker &&<NavigateOverlay  marker={selectedMarker}/>}
     </View>
   );
 }
@@ -291,10 +326,10 @@ const styles = StyleSheet.create({
     }},
   moreDetailsOverlay:{
     position: "absolute",
-    top: 0,
     left: 0,
     right: 0,
     bottom:0,
+    top:0,
     padding:16,
     backgroundColor:"white",
   },    
@@ -333,13 +368,50 @@ const styles = StyleSheet.create({
     left:10,
     position: 'absolute',
 },
-label: {
+backLabel: {
     color: 'white',
     fontWeight: 'semibold',
     fontSize: 16,
     paddingBottom:3,
 },
 backButtonContainer2: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navigateOverlay:{
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom:0,
+    padding:16,
+    height: 200,
+    backgroundColor:"white",
+  },
+  navigateContainer1: {
+    backgroundColor: '#0da154',
+    height: 50,
+    width:100,
+    padding: 10,
+    margin: 10,
+    borderRadius: 5,
+    borderWidth:3,
+    borderColor:'#1efa88',
+    borderTopWidth:2,
+    borderBottomWidth:4,
+    bottom:10,
+    right:10,
+    position: 'absolute',
+},
+navigateLabel: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+    paddingBottom:5,
+},
+navigateContainer2: {
+    borderRadius: 10,
     width: '100%',
     height: '100%',
     alignItems: 'center',
