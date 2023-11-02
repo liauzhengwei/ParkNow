@@ -1,3 +1,4 @@
+import "expo-dev-client";
 import React, { createRef, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View, TouchableOpacity, Text, Image } from "react-native";
