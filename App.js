@@ -219,12 +219,14 @@ export default function App() {
   const searchBar = () => {
     return (
       <View style={styles.searchBar}>
+        <View styles = {{backgroundColor:"white"}}>
         <Ionicons
           name="search"
           color="gray"
           size={20}
-          style={{ paddingVertical: 10, paddingRight: 5 }}
+          style={{ backgroundColor:"white", paddingTop:9,paddingBottom:9 }}
         />
+        </View>
         <GooglePlacesAutocomplete
           ref={_search}
           styles={{
