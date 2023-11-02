@@ -1,7 +1,14 @@
 import "expo-dev-client";
 import React, { createRef, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, TouchableOpacity, Text, Image } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text,
+  Image,
+  Linking,
+} from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import {
@@ -192,6 +199,18 @@ export default function App() {
     );
   };
 
+  const googleNavigation = () => {
+    // change lat long to marker lat long
+    const url = `https://www.google.com/maps/dir/?api=1&destination=1.3452007715119019,103.68086991160779&travelmode=driving`;
+    Linking.openURL(url);
+  };
+
+  const wazeNavigation = () => {
+    // change lat long to marker lat long
+    const url = `https://www.waze.com/ul?ll=1.3452007715119019,103.68086991160779&navigate=yes&zoom=17`;
+    Linking.openURL(url);
+  };
+
   const NavigateOverlay = () => {
     return (
       <View style={styles.navigateOverlay}>
@@ -199,14 +218,18 @@ export default function App() {
         <Text style={{ fontSize: 20 }}>Open with:</Text>
         <Text></Text>
         <View style={styles.row}>
-          <Image
-            source={require("./assets/googleMapsIcon.png")}
-            style={{ width: 75, height: 75, marginLeft: 30, marginTop: 15 }}
-          />
-          <Image
-            source={require("./assets/wazeIcon.jpg")}
-            style={{ width: 100, height: 100, marginTop: 8, marginLeft: 25 }}
-          />
+          <TouchableOpacity onPress={googleNavigation}>
+            <Image
+              source={require("./assets/googleMapsIcon.png")}
+              style={{ width: 75, height: 75, marginLeft: 30, marginTop: 15 }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={wazeNavigation}>
+            <Image
+              source={require("./assets/wazeIcon.jpg")}
+              style={{ width: 100, height: 100, marginTop: 8, marginLeft: 25 }}
+            />
+          </TouchableOpacity>
           <MaterialCommunityIcons
             name="dots-horizontal" // The name of the icon you want to use
             size={80} // Adjust the size of the icon as needed
