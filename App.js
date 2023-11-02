@@ -1,6 +1,6 @@
 import React, { createRef, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, TouchableOpacity,Text} from "react-native";
+import { StyleSheet, View, TouchableOpacity,Text,Image} from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { MaterialIcons, Ionicons,FontAwesome5,MaterialCommunityIcons } from "@expo/vector-icons";
