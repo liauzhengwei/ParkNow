@@ -146,7 +146,16 @@ export default function App() {
         <CloseButton backToMarkerOverlay={backToMarkerOverlay}/>
         <Text style={{fontSize:20}}>Open with:</Text>
         <Text></Text>
-        <Text> "Google Maps" "Waze" ...</Text>
+        <View style={styles.row}>
+          <Image source = {require('./assets/googleMapsIcon.png')} style={{width: 75, height: 75,marginLeft:30,marginTop:15}}/>
+          <Image source = {require('./assets/wazeIcon.jpg')} style={{width: 100, height: 100,marginTop:8,marginLeft:25}}/>
+          <MaterialCommunityIcons
+            name="dots-horizontal" // The name of the icon you want to use
+            size={80} // Adjust the size of the icon as needed
+            color="black" // Set the icon color
+            marginTop={15}
+            marginLeft={15}/>
+        </View>
       </View>
     );
   };
