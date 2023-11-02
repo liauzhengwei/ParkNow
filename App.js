@@ -1,11 +1,16 @@
 import React, { createRef, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, TouchableOpacity,Text,Image} from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text, Image } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { MaterialIcons, Ionicons,FontAwesome5,MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  MaterialIcons,
+  Ionicons,
+  FontAwesome5,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import * as Location from "expo-location";
-import Feather from 'react-native-vector-icons/Feather';
+import Feather from "react-native-vector-icons/Feather";
 
 markerList = [
   {
@@ -31,30 +36,35 @@ export default function App() {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [showMarkerOverlay, setShowMarkerOverlay] = useState(false);
   const [showMoreDetailsOverlay, setShowMoreDetailsOverlay] = useState(false);
-  const [showNavigateOverlay, setShowNavigateOverlay] = useState(false); 
+  const [showNavigateOverlay, setShowNavigateOverlay] = useState(false);
   const [showBlurOverlay, setShowBlurOverlay] = useState(false);
 
-
-  const MarkerOverlay = ({ marker,onClose}) =>{
-    return(
+  const MarkerOverlay = ({ marker, onClose }) => {
+    return (
       <View style={styles.markerOverlay}>
-        <Text style={{ fontSize: 23, fontWeight: "bold", marginLeft: 5, top: 3 }}>"carpark name"</Text>
+        <Text
+          style={{ fontSize: 23, fontWeight: "bold", marginLeft: 5, top: 3 }}
+        >
+          "carpark name"
+        </Text>
         <Text></Text>
         <View style={styles.row}>
           <Ionicons
-            name = "location-sharp"
+            name="location-sharp"
             size={25} // Adjust the size of the icon as needed
             color="black" // Set the icon color
-            marginRight={17}/>
+            marginRight={17}
+          />
           <Text style={{ fontSize: 18 }}>"Address"</Text>
         </View>
         <Text></Text>
         <View style={styles.row}>
           <MaterialCommunityIcons
-            name = "clock-time-four-outline"
+            name="clock-time-four-outline"
             size={25} // Adjust the size of the icon as needed
             color="black" // Set the icon color
-            marginRight={17}/>
+            marginRight={17}
+          />
           <Text style={{ fontSize: 18 }}>Estimated Driving Time</Text>
         </View>
         <Text></Text>
@@ -63,45 +73,64 @@ export default function App() {
             name="car-side" // The name of the icon you want to use
             size={25} // Adjust the size of the icon as needed
             color="black" // Set the icon color
-            marginRight={10} />
+            marginRight={10}
+          />
           <Text style={{ fontSize: 18 }}>Parking Time dropbar</Text>
         </View>
         <Text></Text>
-        <Text style={{ fontSize: 18,paddingLeft:40 }}>Estimated Parking Cost: </Text><DetailsButton /><NavigateButton />
+        <Text style={{ fontSize: 18, paddingLeft: 40 }}>
+          Estimated Parking Cost:{" "}
+        </Text>
+        <DetailsButton />
+        <NavigateButton />
       </View>
-      );
-    };
-    
-  const DetailsButton = () =>{
-    return (
-        <View style={styles.detailsContainer1}>
-            <TouchableOpacity onPress = {toggleMoreDetailsOverlay} style={styles.detailsContainer2}>
-                <Feather name="more-vertical" size = {30} color = "black" style={styles.detailsIcon}/>
-            </TouchableOpacity>
-        </View>
     );
-  }
+  };
+
+  const DetailsButton = () => {
+    return (
+      <View style={styles.detailsContainer1}>
+        <TouchableOpacity
+          onPress={toggleMoreDetailsOverlay}
+          style={styles.detailsContainer2}
+        >
+          <Feather
+            name="more-vertical"
+            size={30}
+            color="black"
+            style={styles.detailsIcon}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   const toggleMoreDetailsOverlay = () => {
     setShowMoreDetailsOverlay(true);
     setShowNavigateOverlay(false);
   };
 
-  const MoreDetailsOverlay = ({ marker,onClose}) =>{
-    return(
+  const MoreDetailsOverlay = ({ marker, onClose }) => {
+    return (
       <View style={styles.moreDetailsOverlay}>
-        <Text style={{fontSize:30,fontWeight:"bold",top:10}}>"carpark name"</Text>
+        <Text style={{ fontSize: 30, fontWeight: "bold", top: 10 }}>
+          "carpark name"
+        </Text>
         <Text></Text>
-        <Text style={{fontSize:18,fontWeight:"bold",paddingTop:20}}>Address:</Text> 
-        <Text style={{fontSize:15}}>"address"</Text>
+        <Text style={{ fontSize: 18, fontWeight: "bold", paddingTop: 20 }}>
+          Address:
+        </Text>
+        <Text style={{ fontSize: 15 }}>"address"</Text>
         <Text></Text>
-        <Text style={{fontSize:18,fontWeight:"bold"}}>Available Lots:</Text>
-        <Text style={{fontSize:15}}>"available lots"</Text>
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+          Available Lots:
+        </Text>
+        <Text style={{ fontSize: 15 }}>"available lots"</Text>
         <Text></Text>
-        <Text style={{fontSize:18,fontWeight:"bold"}}>Car Park Rate:</Text>
-        <Text style={{fontSize:15}}>"car park rate"</Text>  
-        
-        <BackButton backToMarkerOverlay={backToMarkerOverlay}/>
+        <Text style={{ fontSize: 18, fontWeight: "bold" }}>Car Park Rate:</Text>
+        <Text style={{ fontSize: 15 }}>"car park rate"</Text>
+
+        <BackButton backToMarkerOverlay={backToMarkerOverlay} />
       </View>
     );
   };
@@ -111,58 +140,79 @@ export default function App() {
     setShowNavigateOverlay(false);
     setShowMarkerOverlay(true);
     setShowBlurOverlay(false);
-  }
-
-  const BackButton = ({backToMarkerOverlay}) => {
-    return(
-      <View style={styles.backButtonContainer1}>
-        <TouchableOpacity onPress={backToMarkerOverlay} style={styles.backButtonContainer2}>
-          <Text style={styles.backLabel}>Back</Text>  
-        </TouchableOpacity>
-      </View> 
-    );
   };
 
-  const NavigateButton = () =>{
-    const openNavigateOverlay = () => {
-      setShowNavigateOverlay(true);
-      setShowBlurOverlay(true);
-    }
-
+  const BackButton = ({ backToMarkerOverlay }) => {
     return (
-      <View style={styles.navigateContainer1}>
-        <TouchableOpacity onPress={openNavigateOverlay} style={styles.navigateContainer2}>
-            <Text style={styles.navigateLabel}>Navigate</Text>
+      <View style={styles.backButtonContainer1}>
+        <TouchableOpacity
+          onPress={backToMarkerOverlay}
+          style={styles.backButtonContainer2}
+        >
+          <Text style={styles.backLabel}>Back</Text>
         </TouchableOpacity>
       </View>
     );
   };
 
-  const CloseButton = ({backToMarkerOverlay}) => {
-    return(
-    <View style={styles.xButtonContainer1}>
-          <TouchableOpacity onPress={backToMarkerOverlay} style={styles.xButtonContainer2}>
-            <Feather name="x" size={30} color="black" style={styles.closeButton}/>
-          </TouchableOpacity>
-        </View>
+  const NavigateButton = () => {
+    const openNavigateOverlay = () => {
+      setShowNavigateOverlay(true);
+      setShowBlurOverlay(true);
+    };
+
+    return (
+      <View style={styles.navigateContainer1}>
+        <TouchableOpacity
+          onPress={openNavigateOverlay}
+          style={styles.navigateContainer2}
+        >
+          <Text style={styles.navigateLabel}>Navigate</Text>
+        </TouchableOpacity>
+      </View>
     );
   };
 
-  const NavigateOverlay = () =>{
-    return(
+  const CloseButton = ({ backToMarkerOverlay }) => {
+    return (
+      <View style={styles.xButtonContainer1}>
+        <TouchableOpacity
+          onPress={backToMarkerOverlay}
+          style={styles.xButtonContainer2}
+        >
+          <Feather
+            name="x"
+            size={30}
+            color="black"
+            style={styles.closeButton}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const NavigateOverlay = () => {
+    return (
       <View style={styles.navigateOverlay}>
-        <CloseButton backToMarkerOverlay={backToMarkerOverlay}/>
-        <Text style={{fontSize:20}}>Open with:</Text>
+        <CloseButton backToMarkerOverlay={backToMarkerOverlay} />
+        <Text style={{ fontSize: 20 }}>Open with:</Text>
         <Text></Text>
         <View style={styles.row}>
-          <Image source = {require('./assets/googleMapsIcon.png')} style={{width: 75, height: 75,marginLeft:30,marginTop:15}}/>
-          <Image source = {require('./assets/wazeIcon.jpg')} style={{width: 100, height: 100,marginTop:8,marginLeft:25}}/>
+          <Image
+            source={require("./assets/googleMapsIcon.png")}
+            style={{ width: 75, height: 75, marginLeft: 30, marginTop: 15 }}
+          />
+          <Image
+            source={require("./assets/wazeIcon.jpg")}
+            style={{ width: 100, height: 100, marginTop: 8, marginLeft: 25 }}
+          />
           <MaterialCommunityIcons
             name="dots-horizontal" // The name of the icon you want to use
             size={80} // Adjust the size of the icon as needed
             color="black" // Set the icon color
             marginTop={15}
-            marginLeft={15}/>
+            marginLeft={15}
+          />
         </View>
       </View>
     );
@@ -174,9 +224,8 @@ export default function App() {
 
   const BlurScreenOverlay = () => {
     return showBlurOverlay ? (
-      <View style = {styles.blurScreenOverlay}>
-      </View>
-    ) :null;
+      <View style={styles.blurScreenOverlay}></View>
+    ) : null;
   };
 
   const [mapCamera, setMapCamera] = useState({
@@ -256,13 +305,17 @@ export default function App() {
   const searchBar = () => {
     return (
       <View style={styles.searchBar}>
-        <View styles = {{backgroundColor:"white"}}>
-        <Ionicons
-          name="search"
-          color="gray"
-          size={20}
-          style={{ backgroundColor:"white", paddingTop:9,paddingBottom:9 }}
-        />
+        <View styles={{ backgroundColor: "white" }}>
+          <Ionicons
+            name="search"
+            color="gray"
+            size={20}
+            style={{
+              backgroundColor: "white",
+              paddingTop: 9,
+              paddingBottom: 9,
+            }}
+          />
         </View>
         <GooglePlacesAutocomplete
           ref={_search}
@@ -317,21 +370,22 @@ export default function App() {
               identifier={index.toString()}
               key={index.toString()}
               coordinate={marker.coordinate}
-              onPress = {()=>{
+              onPress={() => {
                 setSelectedMarker(marker);
-                setShowMarkerOverlay(true)}}
+                setShowMarkerOverlay(true);
+              }}
             />
           );
         })}
-        </MapView>
-        <BlurScreenOverlay />
-        {setShowMarkerOverlay && selectedMarker && 
-          <MarkerOverlay
-            marker={selectedMarker}
-          />
-        }
-        {showMoreDetailsOverlay && selectedMarker &&<MoreDetailsOverlay  />}
-        {showNavigateOverlay && selectedMarker &&<NavigateOverlay  marker={selectedMarker}/>}
+      </MapView>
+      <BlurScreenOverlay />
+      {setShowMarkerOverlay && selectedMarker && (
+        <MarkerOverlay marker={selectedMarker} />
+      )}
+      {showMoreDetailsOverlay && selectedMarker && <MoreDetailsOverlay />}
+      {showNavigateOverlay && selectedMarker && (
+        <NavigateOverlay marker={selectedMarker} />
+      )}
     </View>
   );
 }
@@ -376,153 +430,154 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: "white",
     borderTopLeftRadius: 20,
-    borderTopRightRadius:20,
-    elevation:5,
-    shadowColor: 'black',
+    borderTopRightRadius: 20,
+    elevation: 5,
+    shadowColor: "black",
     shadowOpacity: 0.2,
-    shadowOffset:{ width:0,height:-3
-    }},
-  moreDetailsOverlay:{
+    shadowOffset: { width: 0, height: -3 },
+  },
+  moreDetailsOverlay: {
     position: "absolute",
     left: 0,
     right: 0,
-    bottom:0,
-    top:0,
-    padding:16,
-    backgroundColor:"white",
-  },    
-  detailsContainer1: {
-      backgroundColor: 'white',
-      height: 40,
-      width:20,
-      top:15,
-      right:25,
-      position: 'absolute',
-      borderRadius: 20,
-      alignItems: 'center',
-      justifyContent: 'center',
+    bottom: 0,
+    top: 0,
+    padding: 16,
+    backgroundColor: "white",
   },
-  detailsIcon:{
-      height: 30,
-      width:30,
+  detailsContainer1: {
+    backgroundColor: "white",
+    height: 40,
+    width: 20,
+    top: 15,
+    right: 25,
+    position: "absolute",
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  detailsIcon: {
+    height: 30,
+    width: 30,
   },
   detailsContainer2: {
-      borderRadius: 10,
-      width: '100%',
-      height: '100%',
-      alignItems: 'center',
-      justifyContent: 'center',
+    borderRadius: 10,
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   backButtonContainer1: {
-    backgroundColor: '#0a0a0a',
+    backgroundColor: "#0a0a0a",
     height: 50,
-    width:100,
+    width: 100,
     padding: 10,
     margin: 10,
     borderRadius: 5,
-    borderWidth:3,
-    borderColor:'#666e6a',
-    bottom:10,
-    left:10,
-    position: 'absolute',
-    zIndex:5,
-},
-backLabel: {
-    color: 'white',
-    fontWeight: 'semibold',
-    fontSize: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height:50,width:100,
-    paddingTop:13,
-    paddingLeft:32,
-
-},
-backButtonContainer2: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderWidth: 3,
+    borderColor: "#666e6a",
+    bottom: 10,
+    left: 10,
+    position: "absolute",
+    zIndex: 5,
   },
-  navigateOverlay:{
+  backLabel: {
+    color: "white",
+    fontWeight: "semibold",
+    fontSize: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    height: 50,
+    width: 100,
+    paddingTop: 13,
+    paddingLeft: 32,
+  },
+  backButtonContainer2: {
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  navigateOverlay: {
     position: "absolute",
     left: 0,
     right: 0,
-    bottom:0,
-    padding:16,
+    bottom: 0,
+    padding: 16,
     height: 200,
-    backgroundColor:"white",
-    zIndex:2,
+    backgroundColor: "white",
+    zIndex: 2,
   },
   navigateContainer1: {
-    backgroundColor: '#0da154',
+    backgroundColor: "#0da154",
     height: 50,
-    width:100,
+    width: 100,
     padding: 10,
     margin: 10,
     borderRadius: 5,
-    borderWidth:3,
-    borderColor:'#1efa88',
-    borderTopWidth:2,
-    borderBottomWidth:4,
-    bottom:10,
-    right:10,
-    position: 'absolute',
-    zIndex:5,
-    justifyContent : 'center',
-    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: "#1efa88",
+    borderTopWidth: 2,
+    borderBottomWidth: 4,
+    bottom: 10,
+    right: 10,
+    position: "absolute",
+    zIndex: 5,
+    justifyContent: "center",
+    alignItems: "center",
   },
   navigateLabel: {
-      color: 'white',
-      fontWeight: 'bold',
-      fontSize: 16,
-      alignItems: 'center',
-      justifyContent: 'center',
-      position:'absolute',
-      height:50,width:100,
-      paddingTop:13,
-      paddingLeft:16,
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
+    height: 50,
+    width: 100,
+    paddingTop: 13,
+    paddingLeft: 16,
   },
   navigateContainer2: {
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   row: {
     flexDirection: "row",
   },
   closeButton: {
     height: 30,
-    width:30,
-    alignItems: 'center',
-    justifyContent: 'center',     
-    position:'absolute',
+    width: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
   },
   xButtonContainer1: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     height: 40,
-    width:40,
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
-    top:15,
-    right:15,
-    zIndex:5,
-  },
-  xButtonContainer2:{
-    width: '100%',
-    height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  blurScreenOverlay:{
+    width: 40,
     position: "absolute",
-    top:0,
-    left:0,
-    right:0,
-    bottom:0,
+    alignItems: "center",
+    justifyContent: "center",
+    top: 15,
+    right: 15,
+    zIndex: 5,
+  },
+  xButtonContainer2: {
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  blurScreenOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: "rgba(0,0,0,0.5)",
-    zIndex:1,
+    zIndex: 1,
   },
 });
