@@ -81,7 +81,8 @@ export default function App() {
   }
 
   const toggleMoreDetailsOverlay = () => {
-    setShowMoreDetailsOverlay(!showMoreDetailsOverlay);
+    setShowMoreDetailsOverlay(true);
+    setShowNavigateOverlay(false);
   };
 
   const MoreDetailsOverlay = ({ marker,onClose}) =>{
@@ -105,15 +106,16 @@ export default function App() {
 
   const backToMarkerOverlay = () => {
     setShowMoreDetailsOverlay(false);
+    setShowNavigateOverlay(false);
     setShowMarkerOverlay(true);
   }
 
   const BackButton = ({backToMarkerOverlay}) => {
     return(
       <View style={styles.backButtonContainer1}>
-      <TouchableOpacity onPress={backToMarkerOverlay} style={styles.backButtonContainer2}>
-        <Text style={styles.backLabel}>Back</Text>  
-      </TouchableOpacity>
+        <TouchableOpacity onPress={backToMarkerOverlay} style={styles.backButtonContainer2}>
+          <Text style={styles.backLabel}>Back</Text>  
+        </TouchableOpacity>
       </View> 
     );
   };
@@ -121,25 +123,36 @@ export default function App() {
   const NavigateButton = () =>{
     return (
       <View style={styles.navigateContainer1}>
-        <TouchableOpacity onPress={toggleNavigateOverlay} style={styles.navigateContainer2}>
+        <TouchableOpacity onPress={openNavigateOverlay} style={styles.navigateContainer2}>
             <Text style={styles.navigateLabel}>Navigate</Text>
         </TouchableOpacity>
       </View>
     );
-  }
-
-  const toggleNavigateOverlay = () => {
-    setShowNavigateOverlay(!showNavigateOverlay);
   };
 
-  const NavigateOverlay = ({ marker,onClose}) =>{
+  const CloseButton = ({backToMarkerOverlay}) => {
+    return(
+    <View style={styles.xButtonContainer1}>
+          <TouchableOpacity onPress={backToMarkerOverlay} style={styles.xButtonContainer2}>
+            <Feather name="x" size={30} color="black" style={styles.closeButton}/>
+          </TouchableOpacity>
+        </View>
+    );
+  };
+
+  const NavigateOverlay = () =>{
     return(
       <View style={styles.navigateOverlay}>
+        <CloseButton backToMarkerOverlay={backToMarkerOverlay}/>
         <Text style={{fontSize:20}}>Open with:</Text>
         <Text></Text>
         <Text> "Google Maps" "Waze" ...</Text>
       </View>
     );
+  };
+
+  const openNavigateOverlay = () => {
+    setShowNavigateOverlay(true);
   };
 
   const [mapCamera, setMapCamera] = useState({
@@ -423,14 +436,14 @@ backButtonContainer2: {
     bottom:10,
     right:10,
     position: 'absolute',
-},
-navigateLabel: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
-    paddingBottom:5,
-},
-navigateContainer2: {
+  },
+  navigateLabel: {
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: 16,
+      paddingBottom:5,
+  },
+  navigateContainer2: {
     borderRadius: 10,
     width: '100%',
     height: '100%',
@@ -440,4 +453,28 @@ navigateContainer2: {
   row: {
     flexDirection: "row",
   },
+  closeButton: {
+    height: 30,
+    width:30,
+    alignItems: 'center',
+    justifyContent: 'center',     
+    position:'absolute',
+  },
+  xButtonContainer1: {
+    backgroundColor: 'white',
+    height: 40,
+    width:40,
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    top:15,
+    right:15,
+    zIndex:5,
+  },
+  xButtonContainer2:{
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
