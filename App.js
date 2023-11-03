@@ -541,8 +541,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 3,
     borderColor: "#1efa88",
-    borderTopWidth: 2,
-    borderBottomWidth: 4,
     bottom: 10,
     right: 10,
     position: "absolute",
