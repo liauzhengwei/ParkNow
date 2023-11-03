@@ -1,4 +1,4 @@
-import "expo-dev-client";
+//import "expo-dev-client";
 import React, { createRef, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {

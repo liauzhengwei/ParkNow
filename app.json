@@ -31,8 +31,7 @@
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.FOREGROUND_SERVICE"
-      ],
-      "package": "com.darylloh29.parknow"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -44,11 +43,6 @@
           "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
       ]
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "1c13a378-3d25-4c3c-951f-c9c72fb2d057"
-      }
-    }
+    ]
   }
 }
