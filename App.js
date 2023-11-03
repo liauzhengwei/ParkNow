@@ -1,4 +1,3 @@
-//import "expo-dev-client";
 import React, { createRef, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -19,8 +18,12 @@ import {
 } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import Feather from "react-native-vector-icons/Feather";
+import 'react-native-url-polyfill/auto'
 
-markerList = [
+const { createClient } = require('@supabase/supabase-js');
+const supabase = createClient('https://xuzmldjqyfgjhiusogqg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1em1sZGpxeWZnamhpdXNvZ3FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTgxMjI1NjUsImV4cCI6MjAxMzY5ODU2NX0.P8ArC6Qs3oxEkbJx8anPh49WJrKtRPVMbQsLjkXHRyI');
+
+/*markerList = [
   {
     coordinate: {
       latitude: 1.3452007715119019,
@@ -37,7 +40,9 @@ markerList = [
     chargingSpotName: "NTU Hall of Residence 4",
     chargingSpotAddress: "11 Nanyang Circle, Singapore 639779",
   },
-];
+];*/
+
+
 export default function App() {
   const _map = createRef();
   const _search = createRef();
@@ -46,6 +51,36 @@ export default function App() {
   const [showMoreDetailsOverlay, setShowMoreDetailsOverlay] = useState(false);
   const [showNavigateOverlay, setShowNavigateOverlay] = useState(false);
   const [showBlurOverlay, setShowBlurOverlay] = useState(false);
+  const [markerList, setMarkerList] = useState([]);
+
+  const CarparkFromSupabase = async () => {
+    try {
+      const { data, error } = await supabase.from('DetailedCarParkInfo').select('*');
+  
+      if (error) {
+        console.error('Error retrieving data from Supabase:', error);
+        return [];
+      }
+  
+      // Transform the data into the desired format
+      const markerList = data.map((row) => ({
+        coordinate: {
+          latitude: row.latitude,
+          longitude: row.longitude,
+        },
+        carParkName: row.CarparkName,
+        carParkAddress: row.Address,
+      }));
+
+      console.log(markerList);//debugging
+
+      return markerList;
+
+    } catch (error) {
+      console.error('An error occurred:', error);
+      return [];
+    }
+  };
 
   const MarkerOverlay = ({ marker, onClose }) => {
     return (
@@ -289,6 +324,15 @@ export default function App() {
   useEffect(() => {
     _map.current.setCamera(mapCamera);
   }, [mapCamera]);
+
+  useEffect(() => {
+    const fetchMarkerList = async () => {
+      const list = await CarparkFromSupabase();
+      setMarkerList(list);
+    };
+  
+    fetchMarkerList();
+  }, []);
 
   const goToCurrentLoc = () => {
     return (
