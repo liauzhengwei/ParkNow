@@ -116,7 +116,7 @@ export default function App() {
         const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
 
         const rate = isWeekday ? weekdayCost : weekendCost;
-        console.log(rate);
+        // console.log(rate);
         // Split the timeInterval into hours and minutes
         const [hours, minutes] = timeInterval.split(":").map(Number);
 
