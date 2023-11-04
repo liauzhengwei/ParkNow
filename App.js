@@ -509,6 +509,7 @@ export default function App() {
       <MapView
         ref={_map}
         style={styles.map}
+        customMapStyle={mapStyle}
         provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
         showsMyLocationButton={false}
@@ -738,3 +739,15 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
 });
+
+const mapStyle = [
+  {
+    featureType: "poi.business",
+    elementType: "labels.icon",
+    stylers: [
+      {
+        visibility: "off",
+      },
+    ],
+  },
+];
