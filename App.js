@@ -27,6 +27,7 @@ export default function App() {
   const _map = createRef();
   const _search = createRef();
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const [selectedMarkerIndex, setSelectedMarkerIndex] = useState(null);
   const [showMarkerOverlay, setShowMarkerOverlay] = useState(false);
   const [showMoreDetailsOverlay, setShowMoreDetailsOverlay] = useState(false);
   const [showNavigateOverlay, setShowNavigateOverlay] = useState(false);
@@ -465,6 +466,7 @@ export default function App() {
     _search.current.blur();
     setShowMarkerOverlay(false);
     setSelectedMarker(null);
+    setSelectedMarkerIndex(null);
     setShowMoreDetailsOverlay(false);
     setShowNavigateOverlay(false);
   };
@@ -518,6 +520,10 @@ export default function App() {
     );
   };
 
+  const isSelectedMarkerIndex = (index) => {
+    return index == selectedMarkerIndex;
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar translucent={false} backgroundColor="gray" />
@@ -538,8 +544,10 @@ export default function App() {
               identifier={index.toString()}
               key={index.toString()}
               coordinate={marker.coordinate}
+              anchor={{ x: 0.5, y: 1.05 }}
               onPress={() => {
                 setSelectedMarker(marker);
+                setSelectedMarkerIndex(index);
                 setShowMarkerOverlay(true);
                 _map.current.animateCamera({
                   center: {
@@ -549,7 +557,17 @@ export default function App() {
                   zoom: 17,
                 });
               }}
-            />
+            >
+              <Image
+                source={require("./assets/adaptive-icon.png")}
+                style={
+                  isSelectedMarkerIndex(index)
+                    ? { height: 75, width: 50 }
+                    : { height: 60, width: 50 }
+                }
+                // resizeMode="contain"
+              />
+            </Marker>
           );
         })}
         {selectedMarker && (
