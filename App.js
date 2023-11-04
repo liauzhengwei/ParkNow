@@ -523,6 +523,13 @@ export default function App() {
               onPress={() => {
                 setSelectedMarker(marker);
                 setShowMarkerOverlay(true);
+                _map.current.animateCamera({
+                  center: {
+                    latitude: marker.coordinate.latitude,
+                    longitude: marker.coordinate.longitude,
+                  },
+                  zoom: 17,
+                });
               }}
             />
           );
