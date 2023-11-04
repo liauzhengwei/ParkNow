@@ -317,14 +317,16 @@ export default function App() {
   };
 
   const googleNavigation = () => {
-    // change lat long to marker lat long
-    const url = `https://www.google.com/maps/dir/?api=1&destination=1.3452007715119019,103.68086991160779&travelmode=driving`;
+    const lat = selectedMarker.coordinate.latitude;
+    const long = selectedMarker.coordinate.longitude;
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${long}&travelmode=driving`;
     Linking.openURL(url);
   };
 
   const wazeNavigation = () => {
-    // change lat long to marker lat long
-    const url = `https://www.waze.com/ul?ll=1.3452007715119019,103.68086991160779&navigate=yes&zoom=17`;
+    const lat = selectedMarker.coordinate.latitude;
+    const long = selectedMarker.coordinate.longitude;
+    const url = `https://www.waze.com/ul?ll=${lat},${long}&navigate=yes&zoom=17`;
     Linking.openURL(url);
   };
 
