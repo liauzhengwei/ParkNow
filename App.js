@@ -57,7 +57,7 @@ export default function App() {
         carParkAddress: row.Address,
         carParkCost: row.ParkingCostPerMin,
       }));
-
+      console.log(markerList);
       return markerList;
 
     } catch (error) {
@@ -183,7 +183,28 @@ export default function App() {
   };
 
   const MoreDetailsOverlay = ({ marker, onClose }) => {
-      
+    function formatCarParkCost(carParkCostString) {
+      try {
+        const regex = /\$([0-9.]+)/g;
+        const matches = carParkCostString.match(regex);
+    
+        if (matches && matches.length === 2) {
+          const weekdayCost = matches[0];
+          const weekendCost = matches[1];
+    
+          return `Weekday: ${weekdayCost}/min\nWeekend: ${weekendCost}/min`;
+        } else {
+          return 'Invalid data';
+        }
+      } catch (error) {
+        console.error('Error formatting carParkCost data:', error);
+        return 'Invalid data';
+      }
+    }
+    
+    const formattedCost = formatCarParkCost(marker.carParkCost);
+    console.log(formattedCost);
+    
     return (
       <View style={styles.moreDetailsOverlay}>
         <Text style={{ fontSize: 30, fontWeight: "bold", top: 10 }}>
@@ -200,7 +221,7 @@ export default function App() {
         <Text style={{ fontSize: 15 }}>"available lots"</Text>
         <Text></Text>
         <Text style={{ fontSize: 18, fontWeight: "bold" }}>Car Park Rate:</Text>
-        <Text style={{ fontSize: 15 }}>{marker.carParkCost}</Text>
+        <Text style={{ fontSize: 15 }}>{formattedCost}</Text>
 
         <BackButton backToMarkerOverlay={backToMarkerOverlay} />
       </View>
