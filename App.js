@@ -18,15 +18,9 @@ import {
 } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import Feather from "react-native-vector-icons/Feather";
-import Foundation from 'react-native-vector-icons/Foundation'
-import 'react-native-url-polyfill/auto'
-import {Picker } from '@react-native-picker/picker';
-//install this package: npx expo install @react-native-picker/picker
-
-const { createClient } = require('@supabase/supabase-js');
-//npm install @supabase/supabase-js
-
-const supabase = createClient('https://xuzmldjqyfgjhiusogqg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1em1sZGpxeWZnamhpdXNvZ3FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTgxMjI1NjUsImV4cCI6MjAxMzY5ODU2NX0.P8ArC6Qs3oxEkbJx8anPh49WJrKtRPVMbQsLjkXHRyI');
+import Foundation from "react-native-vector-icons/Foundation";
+import { Picker } from "@react-native-picker/picker";
+import { supabase } from "./lib/supabase";
 
 export default function App() {
   const _map = createRef();
@@ -37,22 +31,24 @@ export default function App() {
   const [showNavigateOverlay, setShowNavigateOverlay] = useState(false);
   const [showBlurOverlay, setShowBlurOverlay] = useState(false);
   const [markerList, setMarkerList] = useState([]);
-  const [selectedInterval, setSelectedInterval] = useState('00:00');
-  
-    // Function to handle interval selection
-    const handleIntervalChange = (value) => {
-      setSelectedInterval(value);
-    };
+  const [selectedInterval, setSelectedInterval] = useState("00:00");
+
+  // Function to handle interval selection
+  const handleIntervalChange = (value) => {
+    setSelectedInterval(value);
+  };
 
   const CarparkFromSupabase = async () => {
     try {
-      const { data, error } = await supabase.from('DetailedCarParkInfo').select('*');
-  
+      const { data, error } = await supabase
+        .from("DetailedCarParkInfo")
+        .select("*");
+
       if (error) {
-        console.error('Error retrieving data from Supabase:', error);
+        console.error("Error retrieving data from Supabase:", error);
         return [];
       }
-  
+
       // Transform the data into the desired format
       const markerList = data.map((row) => ({
         coordinate: {
@@ -65,25 +61,29 @@ export default function App() {
       }));
 
       return markerList;
-
     } catch (error) {
-      console.error('An error occurred:', error);
+      console.error("An error occurred:", error);
       return [];
     }
   };
 
   const TimeIntervalSelector = () => {
     return (
-      <View style={{flexDirection:'row'}}>
-        <Text style={{ fontSize: 18,marginRight:20,marginTop:15 }}>Parking Time</Text>
-        <Picker style={{ width: 125, height: 55,top:0,backgroundColor:"#ebebeb" }}
+      <View style={{ flexDirection: "row" }}>
+        <Text style={{ fontSize: 18, marginRight: 20, marginTop: 15 }}>
+          Parking Time
+        </Text>
+        <Picker
+          style={{ width: 125, height: 55, top: 0, backgroundColor: "#ebebeb" }}
           selectedValue={selectedInterval}
           onValueChange={handleIntervalChange}
         >
           {Array.from({ length: 24 * 4 }, (_, i) => {
             const hour = Math.floor(i / 4);
             const minute = (i % 4) * 15;
-            const formattedTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+            const formattedTime = `${hour.toString().padStart(2, "0")}:${minute
+              .toString()
+              .padStart(2, "0")}`;
             return (
               <Picker.Item
                 key={formattedTime}
@@ -98,39 +98,39 @@ export default function App() {
   };
 
   const MarkerOverlay = ({ marker, onClose }) => {
-    function calculateCost(carParkCostString,timeInterval) {
+    function calculateCost(carParkCostString, timeInterval) {
       const regex = /\$([0-9.]+)/g;
       const matches = carParkCostString.match(regex);
-    
+
       if (matches && matches.length === 2) {
-        const weekdayCost = parseFloat(matches[0].replace('$', ''));
-        const weekendCost = parseFloat(matches[1].replace('$', ''));
-        
-      // Create a Date object for a specific date (e.g., today's date)
-      const currentDate = new Date(); 
+        const weekdayCost = parseFloat(matches[0].replace("$", ""));
+        const weekendCost = parseFloat(matches[1].replace("$", ""));
 
-      // Get the day of the week as a number (0 for Sunday, 1 for Monday, etc.)
-      const dayOfWeek = currentDate.getDay();
+        // Create a Date object for a specific date (e.g., today's date)
+        const currentDate = new Date();
 
-      // Check if it's a weekday (Monday to Friday)
-      const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
+        // Get the day of the week as a number (0 for Sunday, 1 for Monday, etc.)
+        const dayOfWeek = currentDate.getDay();
 
-      const rate = isWeekday ? weekdayCost : weekendCost;
-      console.log(rate);
-      // Split the timeInterval into hours and minutes
-      const [hours, minutes] = timeInterval.split(':').map(Number);
-      
-      //console.log(hours, minutes);
-      // Calculate the cost
-      const cost = (hours * 60 + minutes) * rate;
+        // Check if it's a weekday (Monday to Friday)
+        const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
 
-      return cost.toFixed(2);
-      } else{
-        return 'Invalid data';
+        const rate = isWeekday ? weekdayCost : weekendCost;
+        console.log(rate);
+        // Split the timeInterval into hours and minutes
+        const [hours, minutes] = timeInterval.split(":").map(Number);
+
+        //console.log(hours, minutes);
+        // Calculate the cost
+        const cost = (hours * 60 + minutes) * rate;
+
+        return cost.toFixed(2);
+      } else {
+        return "Invalid data";
       }
     }
-    const caculatedCost = calculateCost(marker.carParkCost,selectedInterval);
-    
+    const caculatedCost = calculateCost(marker.carParkCost, selectedInterval);
+
     return (
       <View style={styles.markerOverlay}>
         <Text
@@ -178,11 +178,11 @@ export default function App() {
             size={30} // Adjust the size of the icon as needed
             color="black"
             marginLeft={8} // Set the icon color
-            />
+          />
           <Text style={{ fontSize: 18, paddingLeft: 20 }}>
             Estimated Parking
           </Text>
-        </View >
+        </View>
         <View style={styles.row}>
           <Text style={{ fontSize: 18, paddingLeft: 40 }}>Cost: $</Text>
           <Text style={{ fontSize: 18, paddingLeft: 10 }}>{caculatedCost}</Text>
@@ -221,22 +221,22 @@ export default function App() {
       try {
         const regex = /\$([0-9.]+)/g;
         const matches = carParkCostString.match(regex);
-    
+
         if (matches && matches.length === 2) {
           const weekdayCost = matches[0];
           const weekendCost = matches[1];
-    
+
           return `Weekday: ${weekdayCost}/min\nWeekend: ${weekendCost}/min`;
         } else {
-          return 'Invalid data';
+          return "Invalid data";
         }
       } catch (error) {
-        console.error('Error formatting carParkCost data:', error);
-        return 'Invalid data';
+        console.error("Error formatting carParkCost data:", error);
+        return "Invalid data";
       }
     }
     const formattedCost = formatCarParkCost(marker.carParkCost);
-    
+
     return (
       <View style={styles.moreDetailsOverlay}>
         <Text style={{ fontSize: 30, fontWeight: "bold", top: 10 }}>
@@ -412,7 +412,7 @@ export default function App() {
       const list = await CarparkFromSupabase();
       setMarkerList(list);
     };
-  
+
     fetchMarkerList();
   }, []);
 
@@ -520,7 +520,6 @@ export default function App() {
               identifier={index.toString()}
               key={index.toString()}
               coordinate={marker.coordinate}
-              
               onPress={() => {
                 setSelectedMarker(marker);
                 setShowMarkerOverlay(true);
@@ -530,10 +529,12 @@ export default function App() {
         })}
       </MapView>
       <BlurScreenOverlay />
-      {setShowMarkerOverlay && selectedMarker && (
+      {showMarkerOverlay && selectedMarker && (
         <MarkerOverlay marker={selectedMarker} />
       )}
-      {showMoreDetailsOverlay && selectedMarker && <MoreDetailsOverlay marker={selectedMarker} />}
+      {showMoreDetailsOverlay && selectedMarker && (
+        <MoreDetailsOverlay marker={selectedMarker} />
+      )}
       {showNavigateOverlay && selectedMarker && (
         <NavigateOverlay marker={selectedMarker} />
       )}
