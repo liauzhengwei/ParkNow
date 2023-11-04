@@ -50,6 +50,7 @@ export default function App() {
         },
         carParkName: row.CarparkName,
         carParkAddress: row.Address,
+        carParkCost: row.ParkingCostPerMin,
       }));
 
       return markerList;
@@ -66,7 +67,7 @@ export default function App() {
         <Text
           style={{ fontSize: 23, fontWeight: "bold", marginLeft: 5, top: 3 }}
         >
-          "carpark name"
+          {marker.carParkName}
         </Text>
         <Text></Text>
         <View style={styles.row}>
@@ -76,7 +77,7 @@ export default function App() {
             color="black" // Set the icon color
             marginRight={17}
           />
-          <Text style={{ fontSize: 18 }}>"Address"</Text>
+          <Text style={{ fontSize: 18 }}>{marker.carParkAddress}</Text>
         </View>
         <Text></Text>
         <View style={styles.row}>
@@ -86,7 +87,7 @@ export default function App() {
             color="black" // Set the icon color
             marginRight={17}
           />
-          <Text style={{ fontSize: 18 }}>Estimated Driving Time</Text>
+          <Text style={{ fontSize: 18 }}>Estimated Driving Time: </Text>
         </View>
         <Text></Text>
         <View style={styles.row}>
@@ -100,7 +101,7 @@ export default function App() {
         </View>
         <Text></Text>
         <Text style={{ fontSize: 18, paddingLeft: 40 }}>
-          Estimated Parking Cost:{" "}
+          Estimated Parking Cost: 
         </Text>
         <DetailsButton />
         <NavigateButton />
@@ -135,13 +136,12 @@ export default function App() {
     return (
       <View style={styles.moreDetailsOverlay}>
         <Text style={{ fontSize: 30, fontWeight: "bold", top: 10 }}>
-          "carpark name"
+          {marker.carParkName}
         </Text>
         <Text></Text>
         <Text style={{ fontSize: 18, fontWeight: "bold", paddingTop: 20 }}>
-          Address:
+          Address: {marker.carParkAddress}
         </Text>
-        <Text style={{ fontSize: 15 }}>"address"</Text>
         <Text></Text>
         <Text style={{ fontSize: 18, fontWeight: "bold" }}>
           Available Lots:
@@ -149,7 +149,7 @@ export default function App() {
         <Text style={{ fontSize: 15 }}>"available lots"</Text>
         <Text></Text>
         <Text style={{ fontSize: 18, fontWeight: "bold" }}>Car Park Rate:</Text>
-        <Text style={{ fontSize: 15 }}>"car park rate"</Text>
+        <Text style={{ fontSize: 15 }}>{marker.carParkCost}</Text>
 
         <BackButton backToMarkerOverlay={backToMarkerOverlay} />
       </View>
@@ -416,6 +416,7 @@ export default function App() {
               identifier={index.toString()}
               key={index.toString()}
               coordinate={marker.coordinate}
+              
               onPress={() => {
                 setSelectedMarker(marker);
                 setShowMarkerOverlay(true);
@@ -428,7 +429,7 @@ export default function App() {
       {setShowMarkerOverlay && selectedMarker && (
         <MarkerOverlay marker={selectedMarker} />
       )}
-      {showMoreDetailsOverlay && selectedMarker && <MoreDetailsOverlay />}
+      {showMoreDetailsOverlay && selectedMarker && <MoreDetailsOverlay marker={selectedMarker} />}
       {showNavigateOverlay && selectedMarker && (
         <NavigateOverlay marker={selectedMarker} />
       )}
