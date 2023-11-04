@@ -37,6 +37,12 @@ export default function App() {
   const [showNavigateOverlay, setShowNavigateOverlay] = useState(false);
   const [showBlurOverlay, setShowBlurOverlay] = useState(false);
   const [markerList, setMarkerList] = useState([]);
+  const [selectedInterval, setSelectedInterval] = useState('00:00');
+  
+    // Function to handle interval selection
+    const handleIntervalChange = (value) => {
+      setSelectedInterval(value);
+    };
 
   const CarparkFromSupabase = async () => {
     try {
@@ -57,7 +63,7 @@ export default function App() {
         carParkAddress: row.Address,
         carParkCost: row.ParkingCostPerMin,
       }));
-      console.log(markerList);
+
       return markerList;
 
     } catch (error) {
@@ -67,13 +73,6 @@ export default function App() {
   };
 
   const TimeIntervalSelector = () => {
-    const [selectedInterval, setSelectedInterval] = useState('00:00');
-  
-    // Function to handle interval selection
-    const handleIntervalChange = (value) => {
-      setSelectedInterval(value);
-    };
-  
     return (
       <View style={{flexDirection:'row'}}>
         <Text style={{ fontSize: 18,marginRight:20,marginTop:15 }}>Parking Time</Text>
@@ -99,6 +98,39 @@ export default function App() {
   };
 
   const MarkerOverlay = ({ marker, onClose }) => {
+    function calculateCost(carParkCostString,timeInterval) {
+      const regex = /\$([0-9.]+)/g;
+      const matches = carParkCostString.match(regex);
+    
+      if (matches && matches.length === 2) {
+        const weekdayCost = parseFloat(matches[0].replace('$', ''));
+        const weekendCost = parseFloat(matches[1].replace('$', ''));
+        
+      // Create a Date object for a specific date (e.g., today's date)
+      const currentDate = new Date(); 
+
+      // Get the day of the week as a number (0 for Sunday, 1 for Monday, etc.)
+      const dayOfWeek = currentDate.getDay();
+
+      // Check if it's a weekday (Monday to Friday)
+      const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
+
+      const rate = isWeekday ? weekdayCost : weekendCost;
+      console.log(rate);
+      // Split the timeInterval into hours and minutes
+      const [hours, minutes] = timeInterval.split(':').map(Number);
+      
+      //console.log(hours, minutes);
+      // Calculate the cost
+      const cost = (hours * 60 + minutes) * rate;
+
+      return cost.toFixed(2);
+      } else{
+        return 'Invalid data';
+      }
+    }
+    const caculatedCost = calculateCost(marker.carParkCost,selectedInterval);
+    
     return (
       <View style={styles.markerOverlay}>
         <Text
@@ -150,9 +182,11 @@ export default function App() {
           <Text style={{ fontSize: 18, paddingLeft: 20 }}>
             Estimated Parking
           </Text>
+        </View >
+        <View style={styles.row}>
+          <Text style={{ fontSize: 18, paddingLeft: 40 }}>Cost: $</Text>
+          <Text style={{ fontSize: 18, paddingLeft: 10 }}>{caculatedCost}</Text>
         </View>
-          <Text style={{ fontSize: 18, paddingLeft: 40 }}>Cost: </Text>
-
         <DetailsButton />
         <NavigateButton />
       </View>
@@ -201,9 +235,7 @@ export default function App() {
         return 'Invalid data';
       }
     }
-    
     const formattedCost = formatCarParkCost(marker.carParkCost);
-    console.log(formattedCost);
     
     return (
       <View style={styles.moreDetailsOverlay}>
