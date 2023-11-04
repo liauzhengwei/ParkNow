@@ -18,9 +18,14 @@ import {
 } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import Feather from "react-native-vector-icons/Feather";
+import Foundation from 'react-native-vector-icons/Foundation'
 import 'react-native-url-polyfill/auto'
+import {Picker } from '@react-native-picker/picker';
+//install this package: npx expo install @react-native-picker/picker
 
 const { createClient } = require('@supabase/supabase-js');
+//npm install @supabase/supabase-js
+
 const supabase = createClient('https://xuzmldjqyfgjhiusogqg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1em1sZGpxeWZnamhpdXNvZ3FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTgxMjI1NjUsImV4cCI6MjAxMzY5ODU2NX0.P8ArC6Qs3oxEkbJx8anPh49WJrKtRPVMbQsLjkXHRyI');
 
 export default function App() {
@@ -61,6 +66,38 @@ export default function App() {
     }
   };
 
+  const TimeIntervalSelector = () => {
+    const [selectedInterval, setSelectedInterval] = useState('00:00');
+  
+    // Function to handle interval selection
+    const handleIntervalChange = (value) => {
+      setSelectedInterval(value);
+    };
+  
+    return (
+      <View style={{flexDirection:'row'}}>
+        <Text style={{ fontSize: 18,marginRight:20,marginTop:15 }}>Parking Time</Text>
+        <Picker style={{ width: 125, height: 55,top:0,backgroundColor:"#ebebeb" }}
+          selectedValue={selectedInterval}
+          onValueChange={handleIntervalChange}
+        >
+          {Array.from({ length: 24 * 4 }, (_, i) => {
+            const hour = Math.floor(i / 4);
+            const minute = (i % 4) * 15;
+            const formattedTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+            return (
+              <Picker.Item
+                key={formattedTime}
+                label={formattedTime}
+                value={formattedTime}
+              />
+            );
+          })}
+        </Picker>
+      </View>
+    );
+  };
+
   const MarkerOverlay = ({ marker, onClose }) => {
     return (
       <View style={styles.markerOverlay}>
@@ -75,7 +112,8 @@ export default function App() {
             name="location-sharp"
             size={25} // Adjust the size of the icon as needed
             color="black" // Set the icon color
-            marginRight={17}
+            marginRight={12}
+            marginLeft={5}
           />
           <Text style={{ fontSize: 18 }}>{marker.carParkAddress}</Text>
         </View>
@@ -85,7 +123,8 @@ export default function App() {
             name="clock-time-four-outline"
             size={25} // Adjust the size of the icon as needed
             color="black" // Set the icon color
-            marginRight={17}
+            marginRight={12}
+            marginLeft={5}
           />
           <Text style={{ fontSize: 18 }}>Estimated Driving Time: </Text>
         </View>
@@ -96,13 +135,24 @@ export default function App() {
             size={25} // Adjust the size of the icon as needed
             color="black" // Set the icon color
             marginRight={10}
+            marginTop={15}
           />
-          <Text style={{ fontSize: 18 }}>Parking Time dropbar</Text>
+          <TimeIntervalSelector />
         </View>
         <Text></Text>
-        <Text style={{ fontSize: 18, paddingLeft: 40 }}>
-          Estimated Parking Cost: 
-        </Text>
+        <View style={styles.row}>
+          <Foundation
+            name="dollar" // The name of the icon you want to use
+            size={30} // Adjust the size of the icon as needed
+            color="black"
+            marginLeft={8} // Set the icon color
+            />
+          <Text style={{ fontSize: 18, paddingLeft: 20 }}>
+            Estimated Parking
+          </Text>
+        </View>
+          <Text style={{ fontSize: 18, paddingLeft: 40 }}>Cost: </Text>
+
         <DetailsButton />
         <NavigateButton />
       </View>
@@ -133,6 +183,7 @@ export default function App() {
   };
 
   const MoreDetailsOverlay = ({ marker, onClose }) => {
+      
     return (
       <View style={styles.moreDetailsOverlay}>
         <Text style={{ fontSize: 30, fontWeight: "bold", top: 10 }}>
