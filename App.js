@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import MapViewDirections from "react-native-maps-directions";
 import {
   MaterialIcons,
   Ionicons,
@@ -32,6 +33,8 @@ export default function App() {
   const [showBlurOverlay, setShowBlurOverlay] = useState(false);
   const [markerList, setMarkerList] = useState([]);
   const [selectedInterval, setSelectedInterval] = useState("00:00");
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [estimatedDrivingTime, setEstimatedDrivingTime] = useState(null);
 
   // Function to handle interval selection
   const handleIntervalChange = (value) => {
@@ -129,7 +132,7 @@ export default function App() {
         return "Invalid data";
       }
     }
-    const caculatedCost = calculateCost(marker.carParkCost, selectedInterval);
+    const calculatedCost = calculateCost(marker.carParkCost, selectedInterval);
 
     return (
       <View style={styles.markerOverlay}>
@@ -158,7 +161,9 @@ export default function App() {
             marginRight={12}
             marginLeft={5}
           />
-          <Text style={{ fontSize: 18 }}>Estimated Driving Time: </Text>
+          <Text style={{ fontSize: 18 }}>
+            Estimated Driving Time: {estimatedDrivingTime} min
+          </Text>
         </View>
         <Text></Text>
         <View style={styles.row}>
@@ -185,7 +190,9 @@ export default function App() {
         </View>
         <View style={styles.row}>
           <Text style={{ fontSize: 18, paddingLeft: 40 }}>Cost: $</Text>
-          <Text style={{ fontSize: 18, paddingLeft: 10 }}>{caculatedCost}</Text>
+          <Text style={{ fontSize: 18, paddingLeft: 10 }}>
+            {calculatedCost}
+          </Text>
         </View>
         <DetailsButton />
         <NavigateButton />
@@ -400,6 +407,10 @@ export default function App() {
             },
             zoom: 17,
           });
+          setCurrentLocation({
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          });
         }
       );
     })();
@@ -442,6 +453,10 @@ export default function App() {
           longitude: location.coords.longitude,
         },
         zoom: 17,
+      });
+      setCurrentLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
       });
     })();
   };
@@ -537,6 +552,18 @@ export default function App() {
             />
           );
         })}
+        {selectedMarker && (
+          <MapViewDirections
+            origin={currentLocation}
+            destination={selectedMarker.coordinate}
+            apikey={"AIzaSyBQL52pAibHVsZ1Dn-MHQVOFxNWBRBwIbI"}
+            strokeWidth={3}
+            strokeColor="hotpink"
+            onReady={(result) => {
+              setEstimatedDrivingTime(Math.round(result.duration));
+            }}
+          />
+        )}
       </MapView>
       <BlurScreenOverlay />
       {showMarkerOverlay && selectedMarker && (
