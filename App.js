@@ -23,26 +23,6 @@ import 'react-native-url-polyfill/auto'
 const { createClient } = require('@supabase/supabase-js');
 const supabase = createClient('https://xuzmldjqyfgjhiusogqg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh1em1sZGpxeWZnamhpdXNvZ3FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTgxMjI1NjUsImV4cCI6MjAxMzY5ODU2NX0.P8ArC6Qs3oxEkbJx8anPh49WJrKtRPVMbQsLjkXHRyI');
 
-/*markerList = [
-  {
-    coordinate: {
-      latitude: 1.3452007715119019,
-      longitude: 103.68086991160779,
-    },
-    chargingSpotName: "NTU Carpark A",
-    chargingSpotAddress: "50 Nanyang Ave, Block N3.1, Singapore, 639798",
-  },
-  {
-    coordinate: {
-      latitude: 1.3438398751594671,
-      longitude: 103.68593367297621,
-    },
-    chargingSpotName: "NTU Hall of Residence 4",
-    chargingSpotAddress: "11 Nanyang Circle, Singapore 639779",
-  },
-];*/
-
-
 export default function App() {
   const _map = createRef();
   const _search = createRef();
@@ -71,8 +51,6 @@ export default function App() {
         carParkName: row.CarparkName,
         carParkAddress: row.Address,
       }));
-
-      console.log(markerList);//debugging
 
       return markerList;
 
