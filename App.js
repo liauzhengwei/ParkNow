@@ -36,6 +36,14 @@ export default function App() {
   const [selectedInterval, setSelectedInterval] = useState("00:00");
   const [currentLocation, setCurrentLocation] = useState(null);
   const [estimatedDrivingTime, setEstimatedDrivingTime] = useState(null);
+  const [carparkAvailabilityData, setCarparkAvailabilityData] = useState(null);
+  const [mapCamera, setMapCamera] = useState({
+    center: {
+      latitude: 1.3483,
+      longitude: 103.6831,
+    },
+    zoom: 17,
+  });
 
   // Function to handle interval selection
   const handleIntervalChange = (value) => {
@@ -45,7 +53,7 @@ export default function App() {
   const CarparkFromSupabase = async () => {
     try {
       const { data, error } = await supabase
-        .from("DetailedCarParkInfo")
+        .from("hdb_carpark_data")
         .select("*");
 
       if (error) {
@@ -55,13 +63,14 @@ export default function App() {
 
       // Transform the data into the desired format
       const markerList = data.map((row) => ({
+        carParkNo: row.car_park_no,
         coordinate: {
           latitude: row.latitude,
           longitude: row.longitude,
         },
-        carParkName: row.CarparkName,
-        carParkAddress: row.Address,
-        carParkCost: row.ParkingCostPerMin,
+        carParkName: row.address,
+        carParkAddress: row.address,
+        carParkCost: row.parking_cost_per_min,
       }));
 
       return markerList;
@@ -256,26 +265,32 @@ export default function App() {
         </Text>
         <Text></Text>
         <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-          Available Lots:
+          Available Lots: {}
         </Text>
-        <Text style={{ fontSize: 15 }}>"available lots"</Text>
+        <Text style={{ fontSize: 15 }}>
+          {carparkAvailabilityData
+            ? carparkAvailabilityData.lots_available +
+              " / " +
+              carparkAvailabilityData.total_lots
+            : "Data unavailable"}
+        </Text>
         <Text></Text>
         <Text style={{ fontSize: 18, fontWeight: "bold" }}>Car Park Rate:</Text>
         <Text style={{ fontSize: 15 }}>{formattedCost}</Text>
 
-        <BackButton backToMarkerOverlay={backToMarkerOverlay} />
+        <BackButton />
       </View>
     );
   };
 
-  const backToMarkerOverlay = () => {
-    setShowMoreDetailsOverlay(false);
-    setShowNavigateOverlay(false);
-    setShowMarkerOverlay(true);
-    setShowBlurOverlay(false);
-  };
-
-  const BackButton = ({ backToMarkerOverlay }) => {
+  const BackButton = () => {
+    const backToMarkerOverlay = () => {
+      setCarparkAvailabilityData(null);
+      setShowMoreDetailsOverlay(false);
+      setShowNavigateOverlay(false);
+      setShowMarkerOverlay(true);
+      setShowBlurOverlay(false);
+    };
     return (
       <View style={styles.backButtonContainer1}>
         <TouchableOpacity
@@ -290,8 +305,9 @@ export default function App() {
 
   const NavigateButton = () => {
     const openNavigateOverlay = () => {
-      setShowNavigateOverlay(true);
-      setShowBlurOverlay(true);
+      // setShowNavigateOverlay(true);
+      // setShowBlurOverlay(true);
+      console.log(carparkAvailabilityData);
     };
 
     return (
@@ -379,13 +395,31 @@ export default function App() {
     ) : null;
   };
 
-  const [mapCamera, setMapCamera] = useState({
-    center: {
-      latitude: 1.3483,
-      longitude: 103.6831,
-    },
-    zoom: 17,
-  });
+  // const updateCoords = async () => {
+  //     const { data, error } = await supabase
+  //       .from("hdb_carpark_data")
+  //       .select("car_park_no, x_coord, y_coord")
+  //       .like("car_park_no", "T%");
+  //     console.log(data.length);
+  //     for (let i = 0; i < data.length; i++) {
+  //       const response = await fetch(
+  //         `https://www.onemap.gov.sg/api/common/convert/3414to4326?X=${data[i].x_coord}&Y=${data[i].y_coord}`,
+  //         {
+  //           method: "GET",
+  //           headers: {
+  //             Authorization:
+  //               "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxOGJjN2M2NTYzNWUxMDRmMDI5YjQ4YTI1MjRlOTAzZiIsImlzcyI6Imh0dHA6Ly9pbnRlcm5hbC1hbGItb20tcHJkZXppdC1pdC0xMjIzNjk4OTkyLmFwLXNvdXRoZWFzdC0xLmVsYi5hbWF6b25hd3MuY29tL2FwaS92Mi91c2VyL3Nlc3Npb24iLCJpYXQiOjE2OTkxOTE5NDAsImV4cCI6MTY5OTQ1MTE0MCwibmJmIjoxNjk5MTkxOTQwLCJqdGkiOiJCN1Rjc1J1NGxkS0ZMa3JwIiwidXNlcl9pZCI6Njc0LCJmb3JldmVyIjpmYWxzZX0.mcBGYgZEfg_IQgGnKuvaS9M9WEjM9CjryrBmLtxMd44",
+  //           },
+  //         }
+  //       );
+  //       const json = await response.json();
+  //       console.log(i + ": ", json.latitude + ", ", json.longitude);
+  //       const { error } = await supabase
+  //         .from("hdb_carpark_data")
+  //         .update({ latitude: json.latitude, longitude: json.longitude })
+  //         .eq("car_park_no", data[i].car_park_no);
+  //     }
+  // };
 
   useEffect(() => {
     (async () => {
@@ -418,10 +452,6 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    _map.current.setCamera(mapCamera);
-  }, [mapCamera]);
-
-  useEffect(() => {
     const fetchMarkerList = async () => {
       const list = await CarparkFromSupabase();
       setMarkerList(list);
@@ -429,6 +459,40 @@ export default function App() {
 
     fetchMarkerList();
   }, []);
+
+  useEffect(() => {
+    _map.current.setCamera(mapCamera);
+  }, [mapCamera]);
+
+  useEffect(() => {
+    if (selectedMarker) {
+      const getCarparkAvailability = async (carparkNo) => {
+        try {
+          const response = await fetch(
+            `https://api.data.gov.sg/v1/transport/carpark-availability`,
+            {
+              method: "GET",
+              headers: {
+                accept: "*/*",
+              },
+            }
+          );
+          const json = await response.json();
+          const carparkData = json.items[0].carpark_data;
+          for (let i = 0; i < carparkData.length; i++) {
+            if (carparkData[i].carpark_number == carparkNo) {
+              console.log("found");
+              setCarparkAvailabilityData(carparkData[i].carpark_info[0]);
+              return;
+            }
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      getCarparkAvailability(selectedMarker.carParkNo);
+    }
+  }, [selectedMarker]);
 
   const goToCurrentLoc = () => {
     return (
@@ -549,6 +613,7 @@ export default function App() {
                 setSelectedMarker(marker);
                 setSelectedMarkerIndex(index);
                 setShowMarkerOverlay(true);
+                setCarparkAvailabilityData(null);
                 _map.current.animateCamera({
                   center: {
                     latitude: marker.coordinate.latitude,
