@@ -283,14 +283,15 @@ export default function App() {
     );
   };
 
+  const backToMarkerOverlay = () => {
+    setCarparkAvailabilityData(null);
+    setShowMoreDetailsOverlay(false);
+    setShowNavigateOverlay(false);
+    setShowMarkerOverlay(true);
+    setShowBlurOverlay(false);
+  };
+
   const BackButton = () => {
-    const backToMarkerOverlay = () => {
-      setCarparkAvailabilityData(null);
-      setShowMoreDetailsOverlay(false);
-      setShowNavigateOverlay(false);
-      setShowMarkerOverlay(true);
-      setShowBlurOverlay(false);
-    };
     return (
       <View style={styles.backButtonContainer1}>
         <TouchableOpacity
@@ -305,8 +306,8 @@ export default function App() {
 
   const NavigateButton = () => {
     const openNavigateOverlay = () => {
-      // setShowNavigateOverlay(true);
-      // setShowBlurOverlay(true);
+      setShowNavigateOverlay(true);
+      setShowBlurOverlay(true);
       console.log(carparkAvailabilityData);
     };
 
