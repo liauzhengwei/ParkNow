@@ -147,7 +147,13 @@ export default function App() {
     return (
       <View style={styles.markerOverlay}>
         <Text
-          style={{ fontSize: 23, fontWeight: "bold", marginLeft: 5, top: 3 }}
+          style={{
+            fontSize: 23,
+            fontWeight: "bold",
+            marginLeft: 5,
+            top: 3,
+            marginRight: 35,
+          }}
         >
           {marker.carParkName}
         </Text>
