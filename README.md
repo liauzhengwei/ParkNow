@@ -15,13 +15,18 @@ ParkNow is a platform-independent mobile application that provides Singapore car
     <td align="center"><a href="https://github.com/darylloh29" target="_blank"><img src="https://avatars.githubusercontent.com/u/62453290?v=4" width="150px;" alt=""/></a><br /><sub><b>Daryl Loh</b></sub><br /></td>
     <td align="center"><a href="https://github.com/lousyway" target="_blank"><img src="https://avatars.githubusercontent.com/u/92497783?v=4?s=150" width="150px;" alt=""/></a><br /><sub><b>Liau Zheng Wei</b></sub><br /></td>
     <td align="center"><a href="https://github.com/devlinchau" target="_blank"><img src="https://avatars.githubusercontent.com/u/122105152?v=4" width="150px;" alt=""/></a><br /><sub><b>Karl Devlin Chau</b></sub><br /></td>
-    <td align="center"><a href="https://github.com/" target="_blank"><img src="https://avatars.githubusercontent.com/u/" width="150px;" alt=""/></a><br /><sub><b>Evelyn Ling Wei Hseun</b></sub><br /></td>
+    <td align="center"><a href="https://github.com/weihsuen" target="_blank"><img src="https://avatars.githubusercontent.com/u/131374192?v=4" width="150px;" alt=""/></a><br /><sub><b>Evelyn Ling Wei Hseun</b></sub><br /></td>
   </tr>
 </table>
 
 ## Features
 
--** **:
+- **Map Services**: Map interface with Search, Pan and Zoom functionalities
+- **Car Park Information**: Displays Pricing Structure, Location and Available Lots of car parks
+- **Location Services**: Pinpoints User's Current Location
+- **Routing Services**: Showcases Route with Travel Time to destination alongside a list of Navigation apps to chose from for step-by-step route navigation
+- **Estimated Parking Cost Calculation**: Utilises user Parking Duration input, car park Pricing Structure and user's Travel Time to car park to determine parking cost.
+
 
 ## Installation
 1. Clone the repository: `git clone https://github.com/your-username/your-project.git`
@@ -44,7 +49,7 @@ To run the project, use the following command:
 - **Frameworks**: React Native
 
 ## Software Requirements Specification
-For detailed docmuentation, refer to the `.docs` directory
+For detailed documentation, refer to the `.docs` directory
 
 [View the Software Requirements Specification Documentation](https://github.com/darylloh29/ParkNow/blob/main/docs/Software%20Requirements%20Specification%20SC2006.pdf)
 
