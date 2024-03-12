@@ -33,6 +33,9 @@ ParkNow is a platform-independent mobile application that provides Singapore car
 2. Navigate to the project directory: `cd your-project`
 3. Install dependencies: `npm install`
 
+## Video Demonstration
+A video demostration can be downloaded and viewed under the file name `parknow_demo_final.mp4`
+
 ## Usage
 
 To run the project, use the following command:
